@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: nginx:1.7.7
+          name: nginx
+          resources:
+            requests:
+              memory: "65Mi"
+              cpu: "100m"
+              #ephemeral-storage: "0Mi"
+          env:
+            - name: foo
+              value: "bar"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            timeoutSeconds: 10
+            failureThreshold: 10
+
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: nginx
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+    - #host: blin.nginx.local
+      http:
+        paths:
+          - path: /nginx
+            backend:
+              serviceName: nginx-service
+              servicePort: 80

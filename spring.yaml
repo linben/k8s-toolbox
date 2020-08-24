@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spring
+  name: spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: spring
+    spec:
+      containers:
+        - image: blin/spring-helloworld:1
+          name: spring
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: 1
+              #ephemeral-storage: "0Mi"
+          ports:
+            - containerPort: 8080
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spring
+  name: spring-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: spring
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: spring-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+    - #host: blin.spring.local
+      http:
+        paths:
+          - path: /spring
+            backend:
+              serviceName: spring-service
+              servicePort: 80
