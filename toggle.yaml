@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toggle
+  labels:
+    app: toggle
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: toggle
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: toggle
+    spec:
+      containers:
+        - name: python
+          image: python:2
+          command: ["/bin/sh"]
+          args:
+            [
+              "-c",
+              "wget http://downloads.mesosphere.com/misc/toggle.tgz && tar xvf toggle.tgz && python toggle.py 31000",
+            ]
+          ports:
+            - containerPort: 31000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 31000
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            timeoutSeconds: 10
+            failureThreshold: 10
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: toggle
+  name: toggle-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 31000
+  selector:
+    app: toggle
+status:
+  loadBalancer: {}
