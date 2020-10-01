@@ -2,6 +2,6 @@
 
 Various configuration files and scripts for Kubernetes
 
-The Spark folder also has python code modified to run in Kubeflow Jupyter notebooks.
+The Spark folder has python code examples which can run in Kubeflow Jupyter notebooks.
 
 
