@@ -1,0 +1,15 @@
+apiVersion: kudo.dev/v1beta1
+kind: Operator
+metadata:
+  name: zookeeper
+  namespace: default
+spec:
+  kubernetesVersion: 1.14.8
+  kudoVersion: 0.10.0
+  maintainers:
+  - email: avarkockova@mesosphere.com
+    name: Alena Varkockova
+  - email: runyontr@gmail.com
+    name: Tom Runyon
+  url: https://zookeeper.apache.org/
+status: {}
