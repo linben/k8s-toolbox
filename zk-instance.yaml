@@ -1,0 +1,59 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: kudo.dev/v1beta1
+kind: Instance
+metadata:
+  labels:
+    kudo.dev/operator: zookeeper
+  name: zookeeper-instance
+  namespace: default
+spec:
+  operatorVersion:
+    name: zookeeper-3.4.14-0.3.1
+  planExecution: {}
+status:
+  conditions:
+  - lastTransitionTime: "2021-01-05T10:45:28Z"
+    message: ""
+    reason: ResourcesReady
+    status: "True"
+    type: Ready
+  planStatus:
+    deploy:
+      name: deploy
+      phases:
+      - name: zookeeper
+        status: COMPLETE
+        steps:
+        - name: deploy
+          status: COMPLETE
+      - name: validation
+        status: COMPLETE
+        steps:
+        - name: validation
+          status: COMPLETE
+        - name: cleanup
+          status: COMPLETE
+      status: COMPLETE
+    not-allowed:
+      name: not-allowed
+      phases:
+      - name: not-allowed
+        status: NEVER_RUN
+        steps:
+        - name: not-allowed
+          status: NEVER_RUN
+      status: NEVER_RUN
+    validation:
+      name: validation
+      phases:
+      - name: connection
+        status: NEVER_RUN
+        steps:
+        - name: connection
+          status: NEVER_RUN
+        - name: cleanup
+          status: NEVER_RUN
+      status: NEVER_RUN
